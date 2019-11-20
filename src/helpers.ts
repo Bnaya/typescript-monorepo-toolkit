@@ -263,7 +263,7 @@ export function setCompilerOptionsStringProp(
 
   if (!propAst && propValue) {
     propAst = types.builders.objectProperty(
-      types.builders.literal("composite"),
+      types.builders.literal(propName),
       types.builders.stringLiteral(propValue)
     );
 
