@@ -1,7 +1,21 @@
 {
   "name": "typescript-monorepo-toolkit",
-  "version": "0.0.4",
+  "version": "0.0.5",
+  "author": "Bnaya Peretz <me@bnaya.net>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Bnaya/typescript-monorepo-toolkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bnaya/typescript-monorepo-toolkit/issues"
+  },
+  "keywords": [
+    "typescript",
+    "monorepo",
+    "mono-repo",
+    "yarn-workspace"
+  ],
   "bin": "./bin.js",
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -51,6 +65,7 @@
   "files": [
     "README.md",
     "dist",
-    "COMMIT"
+    "COMMIT",
+    "bin.js"
   ]
 }
