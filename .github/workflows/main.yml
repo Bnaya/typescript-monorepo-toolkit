@@ -29,42 +29,9 @@ jobs:
         run: yarn lint
         shell: bash
 
-  test:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
-
-      - name: yarn install
-        run: yarn
-        shell: bash
-
-      - name: test + coverage
-        run: yarn test-coverage
-        shell: bash
-
-      - name: Coveralls GitHub Action
-        uses: coverallsapp/github-action@v1.0.1
-        # env:
-          # NODE_COVERALLS_DEBUG: 1
-        with:
-          github-token: ${{ secrets.github_token }}
-
   build:
     runs-on: ubuntu-18.04
-    needs: [lint, test]
+    needs: [lint]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -91,7 +58,7 @@ jobs:
 
   publish_canary:
     runs-on: ubuntu-18.04
-    needs: [lint, test]
+    needs: [lint]
     # if: github.ref != 'refs/heads/master'
     steps:
       - uses: actions/checkout@v1
