@@ -1,0 +1,56 @@
+{
+  "name": "typescript-monorepo-toolkit",
+  "version": "0.0.1",
+  "license": "MIT",
+  "bin": "./dist/",
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-typescript": "^7.7.2",
+    "@types/commander": "^2.12.2",
+    "@types/debug": "^4.1.5",
+    "@types/jest": "^24.0.23",
+    "@types/json5": "^0.0.30",
+    "@types/lodash.partition": "^4.6.6",
+    "@types/node": "^12",
+    "@types/p-map": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
+    "@typescript-eslint/parser": "^2.8.0",
+    "concurrently": "^5.0.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.6.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "json5": "^2.1.1",
+    "prettier": "^1.19.1",
+    "ts-node": "^8.5.2",
+    "typescript": "^3.7.2",
+    "yarn-deduplicate": "^1.1.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn lint"
+    }
+  },
+  "scripts": {
+    "yarn-deduplicate": "yarn-deduplicate -s fewer yarn.lock",
+    "lint": "concurrently \"eslint src --ext .js,.jsx,.ts,.tsx\" \"tsc --noEmit --emitDeclarationOnly false\"",
+    "build": "tsc",
+    "prepack": "echo `git rev-parse HEAD` > COMMIT; tsc",
+    "test": "exit 0"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "commander": "^4.0.1",
+    "debug": "^4.1.1",
+    "lodash.partition": "^4.6.0",
+    "p-map": "^3.0.0",
+    "recast": "^0.18.5"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "COMMIT"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "env": {
+    "development": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "targets": {
+              "node": "current"
+            },
+            "modules": false
+          }
+        ],
+        "@babel/preset-typescript"
+      ]
+    },
+    "test": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "useBuiltIns": "usage",
+            "corejs": 3,
+            "targets": {
+              "node": "current"
+            },
+            "modules": "cjs"
+          }
+        ],
+        "@babel/preset-typescript"
+      ]
+    }
+  }
+}
