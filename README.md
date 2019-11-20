@@ -7,6 +7,7 @@ It can inject the appropriate tsconfig.references for all of the packages in a y
 Background / Motivation:
 
 * <https://github.com/thi-ng/> 100+ packages monorepo that i want to move to project refs
+* [#32028](https://github.com/microsoft/TypeScript/pull/32028) Build-Free Editing for Project References
 * [Infer project references from common monorepo patterns / tools #25376](https://github.com/microsoft/TypeScript/issues/25376)
 
 How to use
@@ -50,3 +51,7 @@ This tool might break your tsconfigs
 * Find a good name
 * Support `tsconfig.test.json` and similar patterns
 * Support lerna/other monorepo tools that can provider us with the dependency graph
+
+### Need TypeScript/JavaScript help with your open-source project? Feel free to contact me directly!
+
+### Need TypeScript/JavaScript help in your company? [I'm available for consultation](http://bit.ly/2QJ4zk6) :)
