@@ -14,7 +14,7 @@ import { injectRefs } from "./commands";
 const debugFunc = debug("typescript-monorepo-toolkit");
 
 const program = new commander.Command();
-program.version("0.0.1");
+program.version(require("../package.json").version);
 
 program.option(
   "-p, --tsconfig-path <tsconfigpath>",
