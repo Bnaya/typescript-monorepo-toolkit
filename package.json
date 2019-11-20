@@ -2,7 +2,7 @@
   "name": "typescript-monorepo-toolkit",
   "version": "0.0.3",
   "license": "MIT",
-  "bin": "./dist/index.js",
+  "bin": "./bin.js",
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
