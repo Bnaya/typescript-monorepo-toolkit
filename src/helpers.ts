@@ -24,7 +24,7 @@ export function execFile(file: string, args: string[], cwd: string) {
       {
         cwd
       },
-      (error, stdOut, strError) => {
+      (error, stdOut) => {
         if (error) {
           rej(error);
         } else {

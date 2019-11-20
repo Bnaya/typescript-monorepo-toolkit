@@ -1,8 +1,8 @@
 {
   "name": "typescript-monorepo-toolkit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
-  "bin": "./dist/index.ts",
+  "bin": "./dist/index.js",
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
