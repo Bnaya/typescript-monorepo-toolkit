@@ -4,7 +4,7 @@ import { parse, print } from "recast";
 import { promises as fsPromises } from "fs";
 import * as path from "path";
 import { ensureCompositeProject, setProjectReferences } from "./helpers";
-import * as jestDiff from "jest-diff";
+import jestDiff from "jest-diff";
 import * as json5 from "json5";
 
 describe("modify tsconfig", () => {
