@@ -291,11 +291,7 @@ export async function applyTransformationOnAllPackages(
     packageInfo: PackageInfo
   ) => Promise<void>
 ) {
-  const workspaceInfoObject: WorkspaceInfo = JSON.parse(
-    JSON.parse(
-      await execFile("yarn", ["workspaces", "info", "--json"], projectRoot)
-    ).data
-  );
+  const workspaceInfoObject = await readWorkspaceInfoObject(projectRoot);
   const workspaceInfoEntries = Object.entries(workspaceInfoObject);
 
   const [tsPackages, noneTsPackages] = await partitionNoneTs(
@@ -330,4 +326,20 @@ export async function applyTransformationOnAllPackages(
       concurrency: 4
     }
   );
+}
+
+export async function readWorkspaceInfoObject(
+  projectRoot: string
+): Promise<WorkspaceInfo> {
+  const r = await execFile(
+    "yarn",
+    ["-s", "workspaces", "info", "--json"],
+    projectRoot
+  );
+
+  try {
+    return JSON.parse(JSON.parse(r).data);
+  } catch (e) {
+    return JSON.parse(r);
+  }
 }

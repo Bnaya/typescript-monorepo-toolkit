@@ -1,8 +1,7 @@
 import {
-  WorkspaceInfo,
   partitionNoneTs,
   applyOnPackage,
-  execFile
+  readWorkspaceInfoObject
 } from "./helpers";
 import pMap = require("p-map");
 import debug = require("debug");
@@ -15,11 +14,7 @@ export async function injectRefs(
   projectRoot: string,
   options: { tsconfigPathInsidePackages: string; generateBuildAll: boolean }
 ) {
-  const workspaceInfoObject: WorkspaceInfo = JSON.parse(
-    JSON.parse(
-      await execFile("yarn", ["workspaces", "info", "--json"], projectRoot)
-    ).data
-  );
+  const workspaceInfoObject = await readWorkspaceInfoObject(projectRoot);
   const workspaceInfoEntries = Object.entries(workspaceInfoObject);
 
   const [tsPackages, noneTsPackages] = await partitionNoneTs(
