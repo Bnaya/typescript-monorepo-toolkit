@@ -7,7 +7,8 @@ import path from "path";
 import {
   wrapAsyncCommand,
   applyTransformationOnAllPackages,
-  setCompilerOptionsStringProp
+  setCompilerOptionsStringProp,
+  setRootStringProp
 } from "./helpers";
 import colors = require("colors");
 import { injectRefs } from "./commands";
@@ -96,7 +97,7 @@ program
             extendedTsconfigPath,
             path.resolve(root, info.location)
           );
-          setCompilerOptionsStringProp(ast, "extends", localExtendPath);
+          setRootStringProp(ast, "extends", localExtendPath);
         }
       )
     );
