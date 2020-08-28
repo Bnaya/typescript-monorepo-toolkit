@@ -5,7 +5,7 @@ import {
 } from "./helpers";
 import pMap = require("p-map");
 import debug = require("debug");
-import * as path from "path";
+import path from "path";
 import { promises as fsPromises } from "fs";
 
 const debugFunc = debug("typescript-monorepo-toolkit");
