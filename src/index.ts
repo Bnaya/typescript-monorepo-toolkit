@@ -94,8 +94,8 @@ program
         program.tsconfigPath,
         async (ast, root, __, info) => {
           const localExtendPath = path.relative(
-            extendedTsconfigPath,
-            path.resolve(root, info.location)
+            path.resolve(root, info.location),
+            extendedTsconfigPath
           );
           setRootStringProp(ast, "extends", localExtendPath);
         }
