@@ -10,6 +10,7 @@ import {
 } from "./helpers";
 import jestDiff from "jest-diff";
 import * as json5 from "json5";
+import assert from "assert";
 
 describe("modify tsconfig", () => {
   test("ensure composite", async () => {
@@ -109,8 +110,8 @@ describe("setRootStringProp", () => {
 
     setRootStringProp(ast, "extends", "ciao");
 
-    const stringAfter = print(ast).code;
-    console.log(stringAfter);
+    const objectAfter = JSON.parse(print(ast).code)[0];
+    assert(objectAfter.extends === "ciao");
   });
 
   it("replace", () => {
@@ -125,7 +126,7 @@ describe("setRootStringProp", () => {
 
     setRootStringProp(ast, "extends", "another_one");
 
-    const stringAfter = print(ast).code;
-    console.log(stringAfter);
+    const objectAfter = JSON.parse(print(ast).code)[0];
+    assert(objectAfter.extends === "another_one");
   });
 });
