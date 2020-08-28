@@ -60,7 +60,7 @@
     "debug": "^4.1.1",
     "lodash.partition": "^4.6.0",
     "p-map": "^4.0.0",
-    "recast": "^0.18.7",
+    "recast": "^0.20.2",
     "workspace-info": "^0.0.5"
   },
   "files": [
