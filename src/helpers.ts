@@ -256,7 +256,7 @@ export function setRootStringProp(
   propName: string,
   propValue: string | undefined
 ) {
-  let root = ast.program.body[0].expression.elements[0];
+  const root = ast.program.body[0].expression.elements[0];
 
   let propAst = root.properties.find(
     (p: { key: { value: string } }) => p.key.value === propName
