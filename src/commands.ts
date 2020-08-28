@@ -13,7 +13,7 @@ const debugFunc = debug("typescript-monorepo-toolkit");
 export async function injectRefs(
   projectRoot: string,
   options: { tsconfigPathInsidePackages: string; generateBuildAll: boolean }
-) {
+): Promise<void> {
   const workspaceInfoObject = await readWorkspaceInfoObject(projectRoot);
   const workspaceInfoEntries = Object.entries(workspaceInfoObject);
 

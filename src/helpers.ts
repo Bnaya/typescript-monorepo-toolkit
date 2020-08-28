@@ -10,14 +10,18 @@ import { parse, print } from "recast";
 import { getWorkspaceInfo } from "workspace-info";
 const debugFunc = debug("typescript-monorepo-toolkit");
 
-export function wrapAsyncCommand(command: Promise<void>) {
+export function wrapAsyncCommand(command: Promise<void>): void {
   command.catch((error) => {
     console.error("command exited with an error", error);
     process.exit(1);
   });
 }
 
-export function execFile(file: string, args: string[], cwd: string) {
+export function execFile(
+  file: string,
+  args: string[],
+  cwd: string
+): Promise<string> {
   return new Promise<string>((res, rej) => {
     childProcess.execFile(
       file,
@@ -111,7 +115,7 @@ export async function applyOnPackage(
   packageName: string,
   packagesMap: Map<string, PackageInfo>,
   tsconfigPath: string
-) {
+): Promise<void> {
   const packageInfo = packagesMap.get(packageName);
   assertNonNull(packageInfo);
 
@@ -153,7 +157,7 @@ export async function applyTransformationOnTSConfig(
     packageName: string,
     packageInfo: PackageInfo
   ) => Promise<void>
-) {
+): Promise<void> {
   const packageInfo = packagesMap.get(packageName);
   assertNonNull(packageInfo);
 
@@ -173,7 +177,8 @@ export async function applyTransformationOnTSConfig(
   );
 }
 
-export function setProjectReferences(ast: any, pathsToAdd: string[]) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function setProjectReferences(ast: any, pathsToAdd: string[]): void {
   const refsNode = findEnsureProjectReferences(ast);
   refsNode.value.elements = [];
 
@@ -190,7 +195,8 @@ export function setProjectReferences(ast: any, pathsToAdd: string[]) {
   }
 }
 
-export function findEnsureCompilerOptions(ast: any) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function findEnsureCompilerOptions(ast: any): any {
   let compilerOptions = ast.program.body[0].expression.elements[0].properties.find(
     (p: { key: { value: string } }) => p.key.value === "compilerOptions"
   );
@@ -210,7 +216,8 @@ export function findEnsureCompilerOptions(ast: any) {
   return compilerOptions;
 }
 
-export function findEnsureProjectReferences(ast: any) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function findEnsureProjectReferences(ast: any): any {
   let references = ast.program.body[0].expression.elements[0].properties.find(
     (p: { key: { value: string } }) => p.key.value === "references"
   );
@@ -228,7 +235,8 @@ export function findEnsureProjectReferences(ast: any) {
   return references;
 }
 
-export function ensureCompositeProject(ast: any) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function ensureCompositeProject(ast: any): void {
   const compilerOptions = findEnsureCompilerOptions(ast);
 
   let compositeProp = compilerOptions.value.properties.find(
@@ -248,10 +256,11 @@ export function ensureCompositeProject(ast: any) {
 }
 
 export function setRootStringProp(
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   ast: any,
   propName: string,
   propValue: string | undefined
-) {
+): void {
   const root = ast.program.body[0].expression.elements[0];
 
   let propAst = root.properties.find(
@@ -277,10 +286,11 @@ export function setRootStringProp(
 }
 
 export function setCompilerOptionsStringProp(
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   ast: any,
   propName: string,
   propValue: string | undefined
-) {
+): void {
   const compilerOptions = findEnsureCompilerOptions(ast);
 
   let propAst = compilerOptions.value.properties.find(
@@ -316,7 +326,7 @@ export async function applyTransformationOnAllPackages(
     packageName: string,
     packageInfo: PackageInfo
   ) => Promise<void>
-) {
+): Promise<void> {
   const workspaceInfoObject = await readWorkspaceInfoObject(projectRoot);
   const workspaceInfoEntries = Object.entries(workspaceInfoObject);
 
