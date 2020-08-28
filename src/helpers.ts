@@ -7,6 +7,7 @@ import partition = require("lodash.partition");
 import * as debug from "debug";
 import { assertNonNull } from "./assertNonNull";
 import { parse, print } from "recast";
+import { getWorkspaceInfo } from "workspace-info";
 const debugFunc = debug("typescript-monorepo-toolkit");
 
 export function wrapAsyncCommand(command: Promise<void>) {
@@ -331,15 +332,7 @@ export async function applyTransformationOnAllPackages(
 export async function readWorkspaceInfoObject(
   projectRoot: string
 ): Promise<WorkspaceInfo> {
-  const r = await execFile(
-    "yarn",
-    ["-s", "workspaces", "info", "--json"],
-    projectRoot
-  );
-
-  try {
-    return JSON.parse(JSON.parse(r).data);
-  } catch (e) {
-    return JSON.parse(r);
-  }
+  return await getWorkspaceInfo({
+    cwd: projectRoot
+  });
 }
