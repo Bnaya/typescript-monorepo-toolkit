@@ -3,6 +3,9 @@
   "version": "0.0.7",
   "author": "Bnaya Peretz <me@bnaya.net>",
   "license": "MIT",
+  "engines": {
+    "node": ">=10 <15"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:Bnaya/typescript-monorepo-toolkit.git"
