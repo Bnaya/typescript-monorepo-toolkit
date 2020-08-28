@@ -8,7 +8,7 @@ import {
   wrapAsyncCommand,
   applyTransformationOnAllPackages,
   setCompilerOptionsStringProp,
-  setRootStringProp
+  setRootStringProp,
 } from "./helpers";
 import colors = require("colors");
 import { injectRefs } from "./commands";
@@ -16,6 +16,7 @@ import { injectRefs } from "./commands";
 const debugFunc = debug("typescript-monorepo-toolkit");
 
 const program = new commander.Command();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 program.version(require("../package.json").version);
 
 program.option(
@@ -37,12 +38,12 @@ program
   .action((yarnWorkspaceRoot, cmdObj) => {
     debugFunc("Running command inject-refs with %O", {
       yarnWorkspaceRoot,
-      cmdObj
+      cmdObj,
     });
     wrapAsyncCommand(
       injectRefs(yarnWorkspaceRoot, {
         generateBuildAll: cmdObj.generateBuildAll,
-        tsconfigPathInsidePackages: program.tsconfigPath
+        tsconfigPathInsidePackages: program.tsconfigPath,
       })
     );
   });
@@ -57,7 +58,7 @@ program
       applyTransformationOnAllPackages(
         yarnWorkspaceRoot,
         program.tsconfigPath,
-        async ast => {
+        async (ast) => {
           setCompilerOptionsStringProp(ast, "outDir", newOutDir);
         }
       )
@@ -74,7 +75,7 @@ program
       applyTransformationOnAllPackages(
         yarnWorkspaceRoot,
         program.tsconfigPath,
-        async ast => {
+        async (ast) => {
           setCompilerOptionsStringProp(ast, "rootDir", newOutDir);
         }
       )

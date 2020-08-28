@@ -11,7 +11,7 @@ import { getWorkspaceInfo } from "workspace-info";
 const debugFunc = debug("typescript-monorepo-toolkit");
 
 export function wrapAsyncCommand(command: Promise<void>) {
-  command.catch(error => {
+  command.catch((error) => {
     console.error("command exited with an error", error);
     process.exit(1);
   });
@@ -23,7 +23,7 @@ export function execFile(file: string, args: string[], cwd: string) {
       file,
       args,
       {
-        cwd
+        cwd,
       },
       (error, stdOut) => {
         if (error) {
@@ -63,17 +63,17 @@ export async function partitionNoneTs(
       return {
         is,
         packageName,
-        packageInfo
+        packageInfo,
       };
     },
     {
-      concurrency: 4
+      concurrency: 4,
     }
-  ).then(all => {
-    const [ts, noneTs] = partition(all, e => e.is);
+  ).then((all) => {
+    const [ts, noneTs] = partition(all, (e) => e.is);
     return [
-      ts.map(e => [e.packageName, e.packageInfo]),
-      noneTs.map(e => [e.packageName, e.packageInfo])
+      ts.map((e) => [e.packageName, e.packageInfo]),
+      noneTs.map((e) => [e.packageName, e.packageInfo]),
     ];
 
     // tuple map ain't smart enough
@@ -126,10 +126,10 @@ export async function applyOnPackage(
   const ast = parse(asJs, {});
 
   const deps = packageInfo.workspaceDependencies
-    .map(depPackageName => packagesMap.get(depPackageName))
+    .map((depPackageName) => packagesMap.get(depPackageName))
     .filter((v): v is NonNullable<typeof v> => v !== undefined);
 
-  const paths = deps.map(d =>
+  const paths = deps.map((d) =>
     path.relative(absolutePath, path.resolve(root, d.location))
   );
 
@@ -138,9 +138,7 @@ export async function applyOnPackage(
 
   await fsPromises.writeFile(
     path.resolve(root, packageInfo.location, tsconfigPath),
-    print(ast)
-      .code.substring(1)
-      .slice(0, -1)
+    print(ast).code.substring(1).slice(0, -1)
   );
 }
 
@@ -171,9 +169,7 @@ export async function applyTransformationOnTSConfig(
 
   await fsPromises.writeFile(
     path.resolve(root, packageInfo.location, tsconfigPath),
-    print(ast)
-      .code.substring(1)
-      .slice(0, -1)
+    print(ast).code.substring(1).slice(0, -1)
   );
 }
 
@@ -188,7 +184,7 @@ export function setProjectReferences(ast: any, pathsToAdd: string[]) {
           "init",
           types.builders.literal("path"),
           types.builders.literal(path)
-        )
+        ),
       ])
     );
   }
@@ -336,14 +332,14 @@ export async function applyTransformationOnAllPackages(
   );
   debugFunc(
     "none ts: %j",
-    noneTsPackages.map(p => p[0])
+    noneTsPackages.map((p) => p[0])
   );
 
   const map = new Map(tsPackages);
 
   await pMap(
     tsPackages,
-    p => {
+    (p) => {
       applyTransformationOnTSConfig(
         projectRoot,
         p[0],
@@ -353,7 +349,7 @@ export async function applyTransformationOnAllPackages(
       );
     },
     {
-      concurrency: 4
+      concurrency: 4,
     }
   );
 }
@@ -362,6 +358,6 @@ export async function readWorkspaceInfoObject(
   projectRoot: string
 ): Promise<WorkspaceInfo> {
   return await getWorkspaceInfo({
-    cwd: projectRoot
+    cwd: projectRoot,
   });
 }
