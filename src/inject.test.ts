@@ -3,9 +3,14 @@
 import { parse, print } from "recast";
 import { promises as fsPromises } from "fs";
 import * as path from "path";
-import { ensureCompositeProject, setProjectReferences } from "./helpers";
+import {
+  ensureCompositeProject,
+  setProjectReferences,
+  setRootStringProp
+} from "./helpers";
 import jestDiff from "jest-diff";
 import * as json5 from "json5";
+import assert from "assert";
 
 describe("modify tsconfig", () => {
   test("ensure composite", async () => {
@@ -90,5 +95,38 @@ describe("modify tsconfig", () => {
     //   [31m+   \\"references\\": Object {},[39m
     //   [2m  }[22m"
     // `);
+  });
+});
+
+describe("setRootStringProp", () => {
+  it("adds missing", () => {
+    const asString = JSON.stringify({
+      compilerOptions: {},
+      include: []
+    });
+    const itsJSwinkwink = `[${asString}]`;
+
+    const ast = parse(itsJSwinkwink);
+
+    setRootStringProp(ast, "extends", "ciao");
+
+    const objectAfter = JSON.parse(print(ast).code)[0];
+    assert(objectAfter.extends === "ciao");
+  });
+
+  it("replace", () => {
+    const asString = JSON.stringify({
+      compilerOptions: {},
+      include: [],
+      extends: "hello"
+    });
+    const itsJSwinkwink = `[${asString}]`;
+
+    const ast = parse(itsJSwinkwink);
+
+    setRootStringProp(ast, "extends", "another_one");
+
+    const objectAfter = JSON.parse(print(ast).code)[0];
+    assert(objectAfter.extends === "another_one");
   });
 });

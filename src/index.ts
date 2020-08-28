@@ -1,12 +1,14 @@
 // How to preserve comments? use jscodeshift?
 // https://github.com/json5/json5/issues/177
 
-import * as commander from "commander";
-import * as debug from "debug";
+import commander from "commander";
+import debug from "debug";
+import path from "path";
 import {
   wrapAsyncCommand,
   applyTransformationOnAllPackages,
-  setCompilerOptionsStringProp
+  setCompilerOptionsStringProp,
+  setRootStringProp
 } from "./helpers";
 import colors = require("colors");
 import { injectRefs } from "./commands";
@@ -74,6 +76,28 @@ program
         program.tsconfigPath,
         async ast => {
           setCompilerOptionsStringProp(ast, "rootDir", newOutDir);
+        }
+      )
+    );
+  });
+
+program
+  .command("set-extend <yarn-project-root> [extendedTsconfigPath]")
+  .description(
+    "Set the compilerOptions.rootDir in all of the packages. omit new value to delete"
+  )
+  .action((yarnWorkspaceRoot, extendedTsconfigPath) => {
+    extendedTsconfigPath = path.resolve(extendedTsconfigPath);
+    wrapAsyncCommand(
+      applyTransformationOnAllPackages(
+        yarnWorkspaceRoot,
+        program.tsconfigPath,
+        async (ast, root, __, info) => {
+          const localExtendPath = path.relative(
+            path.resolve(root, info.location),
+            extendedTsconfigPath
+          );
+          setRootStringProp(ast, "extends", localExtendPath);
         }
       )
     );

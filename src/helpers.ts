@@ -1,10 +1,10 @@
 import { types } from "recast";
-import * as childProcess from "child_process";
-import * as path from "path";
+import childProcess from "child_process";
+import path from "path";
 import { promises as fsPromises, constants } from "fs";
-import * as pMap from "p-map";
-import partition = require("lodash.partition");
-import * as debug from "debug";
+import pMap from "p-map";
+import partition from "lodash.partition";
+import debug from "debug";
 import { assertNonNull } from "./assertNonNull";
 import { parse, print } from "recast";
 import { getWorkspaceInfo } from "workspace-info";
@@ -249,6 +249,35 @@ export function ensureCompositeProject(ast: any) {
   }
 
   compositeProp.value = types.builders.booleanLiteral(true);
+}
+
+export function setRootStringProp(
+  ast: any,
+  propName: string,
+  propValue: string | undefined
+) {
+  const root = ast.program.body[0].expression.elements[0];
+
+  let propAst = root.properties.find(
+    (p: { key: { value: string } }) => p.key.value === propName
+  );
+
+  if (!propAst && propValue) {
+    propAst = types.builders.objectProperty(
+      types.builders.literal(propName),
+      types.builders.stringLiteral(propValue)
+    );
+    root.properties.push(propAst);
+  }
+  if (!propValue) {
+    if (propAst) {
+      // delete prop
+      const index = root.properties.indexOf(propAst);
+      root.properties.splice(index, 1);
+    }
+  } else {
+    propAst.value = types.builders.stringLiteral(propValue);
+  }
 }
 
 export function setCompilerOptionsStringProp(
