@@ -58,6 +58,9 @@ jobs:
         shell: bash
 
       - run: echo //registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN} > .npmrc
+      - run: echo $NPM_AUTH_TOKEN
+      - run: echo ${NPM_AUTH_TOKEN}
+      - run: cat .npmrc
       - run: npm whoami
 
       - name: Publish with primer/publish
