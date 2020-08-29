@@ -1,7 +1,7 @@
 import {
   partitionNoneTs,
   applyOnPackage,
-  readWorkspaceInfoObject
+  readWorkspaceInfoObject,
 } from "./helpers";
 import pMap = require("p-map");
 import debug = require("debug");
@@ -13,7 +13,7 @@ const debugFunc = debug("typescript-monorepo-toolkit");
 export async function injectRefs(
   projectRoot: string,
   options: { tsconfigPathInsidePackages: string; generateBuildAll: boolean }
-) {
+): Promise<void> {
   const workspaceInfoObject = await readWorkspaceInfoObject(projectRoot);
   const workspaceInfoEntries = Object.entries(workspaceInfoObject);
 
@@ -29,14 +29,14 @@ export async function injectRefs(
   );
   debugFunc(
     "none ts: %j",
-    noneTsPackages.map(p => p[0])
+    noneTsPackages.map((p) => p[0])
   );
 
   const map = new Map(tsPackages);
 
   await pMap(
     tsPackages,
-    p => {
+    (p) => {
       applyOnPackage(
         projectRoot,
         p[0],
@@ -45,7 +45,7 @@ export async function injectRefs(
       );
     },
     {
-      concurrency: 4
+      concurrency: 4,
     }
   );
 
@@ -66,9 +66,9 @@ export async function injectRefs(
         path: path.relative(
           projectRoot,
           path.resolve(projectRoot, info.location)
-        )
+        ),
       })),
-      include: []
+      include: [],
     };
 
     await fsPromises.writeFile(

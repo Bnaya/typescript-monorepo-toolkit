@@ -10,20 +10,24 @@ import { parse, print } from "recast";
 import { getWorkspaceInfo } from "workspace-info";
 const debugFunc = debug("typescript-monorepo-toolkit");
 
-export function wrapAsyncCommand(command: Promise<void>) {
-  command.catch(error => {
+export function wrapAsyncCommand(command: Promise<void>): void {
+  command.catch((error) => {
     console.error("command exited with an error", error);
     process.exit(1);
   });
 }
 
-export function execFile(file: string, args: string[], cwd: string) {
+export function execFile(
+  file: string,
+  args: string[],
+  cwd: string
+): Promise<string> {
   return new Promise<string>((res, rej) => {
     childProcess.execFile(
       file,
       args,
       {
-        cwd
+        cwd,
       },
       (error, stdOut) => {
         if (error) {
@@ -63,17 +67,17 @@ export async function partitionNoneTs(
       return {
         is,
         packageName,
-        packageInfo
+        packageInfo,
       };
     },
     {
-      concurrency: 4
+      concurrency: 4,
     }
-  ).then(all => {
-    const [ts, noneTs] = partition(all, e => e.is);
+  ).then((all) => {
+    const [ts, noneTs] = partition(all, (e) => e.is);
     return [
-      ts.map(e => [e.packageName, e.packageInfo]),
-      noneTs.map(e => [e.packageName, e.packageInfo])
+      ts.map((e) => [e.packageName, e.packageInfo]),
+      noneTs.map((e) => [e.packageName, e.packageInfo]),
     ];
 
     // tuple map ain't smart enough
@@ -111,7 +115,7 @@ export async function applyOnPackage(
   packageName: string,
   packagesMap: Map<string, PackageInfo>,
   tsconfigPath: string
-) {
+): Promise<void> {
   const packageInfo = packagesMap.get(packageName);
   assertNonNull(packageInfo);
 
@@ -126,10 +130,10 @@ export async function applyOnPackage(
   const ast = parse(asJs, {});
 
   const deps = packageInfo.workspaceDependencies
-    .map(depPackageName => packagesMap.get(depPackageName))
+    .map((depPackageName) => packagesMap.get(depPackageName))
     .filter((v): v is NonNullable<typeof v> => v !== undefined);
 
-  const paths = deps.map(d =>
+  const paths = deps.map((d) =>
     path.relative(absolutePath, path.resolve(root, d.location))
   );
 
@@ -138,9 +142,7 @@ export async function applyOnPackage(
 
   await fsPromises.writeFile(
     path.resolve(root, packageInfo.location, tsconfigPath),
-    print(ast)
-      .code.substring(1)
-      .slice(0, -1)
+    print(ast).code.substring(1).slice(0, -1)
   );
 }
 
@@ -155,7 +157,7 @@ export async function applyTransformationOnTSConfig(
     packageName: string,
     packageInfo: PackageInfo
   ) => Promise<void>
-) {
+): Promise<void> {
   const packageInfo = packagesMap.get(packageName);
   assertNonNull(packageInfo);
 
@@ -171,13 +173,12 @@ export async function applyTransformationOnTSConfig(
 
   await fsPromises.writeFile(
     path.resolve(root, packageInfo.location, tsconfigPath),
-    print(ast)
-      .code.substring(1)
-      .slice(0, -1)
+    print(ast).code.substring(1).slice(0, -1)
   );
 }
 
-export function setProjectReferences(ast: any, pathsToAdd: string[]) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function setProjectReferences(ast: any, pathsToAdd: string[]): void {
   const refsNode = findEnsureProjectReferences(ast);
   refsNode.value.elements = [];
 
@@ -188,13 +189,14 @@ export function setProjectReferences(ast: any, pathsToAdd: string[]) {
           "init",
           types.builders.literal("path"),
           types.builders.literal(path)
-        )
+        ),
       ])
     );
   }
 }
 
-export function findEnsureCompilerOptions(ast: any) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function findEnsureCompilerOptions(ast: any): any {
   let compilerOptions = ast.program.body[0].expression.elements[0].properties.find(
     (p: { key: { value: string } }) => p.key.value === "compilerOptions"
   );
@@ -214,7 +216,8 @@ export function findEnsureCompilerOptions(ast: any) {
   return compilerOptions;
 }
 
-export function findEnsureProjectReferences(ast: any) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function findEnsureProjectReferences(ast: any): any {
   let references = ast.program.body[0].expression.elements[0].properties.find(
     (p: { key: { value: string } }) => p.key.value === "references"
   );
@@ -232,7 +235,8 @@ export function findEnsureProjectReferences(ast: any) {
   return references;
 }
 
-export function ensureCompositeProject(ast: any) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function ensureCompositeProject(ast: any): void {
   const compilerOptions = findEnsureCompilerOptions(ast);
 
   let compositeProp = compilerOptions.value.properties.find(
@@ -252,10 +256,11 @@ export function ensureCompositeProject(ast: any) {
 }
 
 export function setRootStringProp(
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   ast: any,
   propName: string,
   propValue: string | undefined
-) {
+): void {
   const root = ast.program.body[0].expression.elements[0];
 
   let propAst = root.properties.find(
@@ -281,10 +286,11 @@ export function setRootStringProp(
 }
 
 export function setCompilerOptionsStringProp(
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   ast: any,
   propName: string,
   propValue: string | undefined
-) {
+): void {
   const compilerOptions = findEnsureCompilerOptions(ast);
 
   let propAst = compilerOptions.value.properties.find(
@@ -320,7 +326,7 @@ export async function applyTransformationOnAllPackages(
     packageName: string,
     packageInfo: PackageInfo
   ) => Promise<void>
-) {
+): Promise<void> {
   const workspaceInfoObject = await readWorkspaceInfoObject(projectRoot);
   const workspaceInfoEntries = Object.entries(workspaceInfoObject);
 
@@ -336,14 +342,14 @@ export async function applyTransformationOnAllPackages(
   );
   debugFunc(
     "none ts: %j",
-    noneTsPackages.map(p => p[0])
+    noneTsPackages.map((p) => p[0])
   );
 
   const map = new Map(tsPackages);
 
   await pMap(
     tsPackages,
-    p => {
+    (p) => {
       applyTransformationOnTSConfig(
         projectRoot,
         p[0],
@@ -353,7 +359,7 @@ export async function applyTransformationOnAllPackages(
       );
     },
     {
-      concurrency: 4
+      concurrency: 4,
     }
   );
 }
@@ -362,6 +368,6 @@ export async function readWorkspaceInfoObject(
   projectRoot: string
 ): Promise<WorkspaceInfo> {
   return await getWorkspaceInfo({
-    cwd: projectRoot
+    cwd: projectRoot,
   });
 }

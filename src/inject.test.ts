@@ -6,7 +6,7 @@ import * as path from "path";
 import {
   ensureCompositeProject,
   setProjectReferences,
-  setRootStringProp
+  setRootStringProp,
 } from "./helpers";
 import jestDiff from "jest-diff";
 import * as json5 from "json5";
@@ -102,7 +102,7 @@ describe("setRootStringProp", () => {
   it("adds missing", () => {
     const asString = JSON.stringify({
       compilerOptions: {},
-      include: []
+      include: [],
     });
     const itsJSwinkwink = `[${asString}]`;
 
@@ -118,7 +118,7 @@ describe("setRootStringProp", () => {
     const asString = JSON.stringify({
       compilerOptions: {},
       include: [],
-      extends: "hello"
+      extends: "hello",
     });
     const itsJSwinkwink = `[${asString}]`;
 
