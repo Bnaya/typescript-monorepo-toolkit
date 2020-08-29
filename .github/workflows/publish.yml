@@ -57,6 +57,9 @@ jobs:
         run: yarn build
         shell: bash
 
+      - run: echo //registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN} > .npmrc
+      - run: npm whoami
+
       - name: Publish with primer/publish
         uses: primer/publish@master
         env:
