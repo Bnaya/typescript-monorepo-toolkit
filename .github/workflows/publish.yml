@@ -1,6 +1,6 @@
-name: General Validity
+name: Publish
 
-on: ["push", "pull_request"]
+on: ["pull_request"]
 
 jobs:
   lint:
@@ -12,7 +12,7 @@ jobs:
           node-version: 12.x
 
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
@@ -29,34 +29,7 @@ jobs:
         run: yarn lint
         shell: bash
 
-  build:
-    runs-on: ubuntu-18.04
-    needs: [lint]
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
-
-      - name: yarn install
-        run: yarn
-        shell: bash
-
-      - name: build
-        run: yarn build
-        shell: bash
-
-  publish_canary:
+  publish:
     runs-on: ubuntu-18.04
     needs: [lint]
     # if: github.ref != 'refs/heads/master'
@@ -67,7 +40,7 @@ jobs:
           node-version: 12.x
 
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
