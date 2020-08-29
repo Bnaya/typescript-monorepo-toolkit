@@ -49,10 +49,6 @@ jobs:
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
 
-      - name: print env
-        run: printenv
-        shell: bash
-
       - name: yarn install
         run: yarn
         shell: bash
