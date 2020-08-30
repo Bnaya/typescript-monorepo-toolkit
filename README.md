@@ -31,9 +31,10 @@ Options:
   -h, --help                                    output usage information
 
 Commands:
-  inject-refs [options] <yarn-project-root>     Inject the appropriate tsconfig references based on yarn workspaces dependency graph
-  set-outDir <yarn-project-root> [newOutDir]    Set the compilerOptions.outDir in all of the packages. omit new value to delete
-  set-rootDir <yarn-project-root> [newRootDir]  Set the compilerOptions.rootDir in all of the packages. omit new value to delete
+  inject-refs [options] <yarn-project-root>              Inject the appropriate tsconfig references based on yarn workspaces dependency graph
+  set-outDir <yarn-project-root> [newOutDir]             Set the compilerOptions.outDir in all of the packages. omit new value to delete
+  set-rootDir <yarn-project-root> [newRootDir]           Set the compilerOptions.rootDir in all of the packages. omit new value to delete
+  set-extend <yarn-project-root> [extendedTsconfigPath]  Set the extends entry in all of the tsconfigs. omit new value to delete
   ```
 
 ## How does it work

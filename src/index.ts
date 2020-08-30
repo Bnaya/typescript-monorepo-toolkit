@@ -85,7 +85,7 @@ program
 program
   .command("set-extend <yarn-project-root> [extendedTsconfigPath]")
   .description(
-    "Set the compilerOptions.rootDir in all of the packages. omit new value to delete"
+    "Set the extends entry in all of the tsconfigs. omit new value to delete"
   )
   .action((yarnWorkspaceRoot, extendedTsconfigPath) => {
     extendedTsconfigPath = path.resolve(extendedTsconfigPath);
